@@ -128,14 +128,16 @@ void selection(const Eigen::Vector2i &start, const Eigen::Vector2i &end)
 void buildModel()
 {
 
-	TimeManager::getCurrent()->setTimeStepSize(0.02f);
+	//TimeManager::getCurrent()->setTimeStepSize(0.02f);
+	TimeManager::getCurrent()->setTimeStepSize(0.005f);
 
 	sim.setDamping(0.001f);
 
-	model.setElasticRodBendAndTwistStiffness(0.5f);
+	//model.setElasticRodBendAndTwistStiffness(0.5f);
+	model.setElasticRodBendAndTwistStiffness(1.0f);
 	model.setElasticRodStretchStiffness(1.0f);
-	restDarboux = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
-
+	//restDarboux = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
+	restDarboux = Eigen::Vector3f(0.15f, 0.55f, 0.85f);
 	createRod();
 }
 
