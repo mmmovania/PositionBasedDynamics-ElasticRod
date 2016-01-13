@@ -128,7 +128,7 @@ void selection(const Eigen::Vector2i &start, const Eigen::Vector2i &end)
 void buildModel()
 {
 
-	TimeManager::getCurrent()->setTimeStepSize(0.002f);
+	TimeManager::getCurrent()->setTimeStepSize(0.02f);
 
 	sim.setDamping(0.001f);
 

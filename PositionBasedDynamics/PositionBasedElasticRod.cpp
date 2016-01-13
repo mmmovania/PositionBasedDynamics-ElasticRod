@@ -27,12 +27,12 @@ using namespace PBD;
 const float EPSILON = 1e-6f;
 
 const int permutation[3][3] = {
-	//0, 1, 2,
-	//1, 2, 0,
-	//2, 1, 0
-	0, 2, 1,
-	1, 0, 2,
+	0, 1, 2,
+	1, 2, 0,
 	2, 1, 0
+	//0, 2, 1,
+	//1, 0, 2,
+	//2, 1, 0
 };
 
 bool  PositionBasedElasticRod::ProjectEdgeConstraints(
@@ -86,7 +86,8 @@ bool  PositionBasedElasticRod::ProjectEdgeConstraints(
 		p2pm = pG + corrC - pm;
 
 		float p2pm_mag = p2pm.norm();
-		p2pm *= 1.0f / p2pm_mag;
+		if (p2pm_mag > EPSILON)
+			p2pm *= 1.0f / p2pm_mag;
 
 		lambda = (p2pm_mag - ghostEdgeRestLength) / wSum * edgeKs;
 
@@ -239,8 +240,7 @@ bool PositionBasedElasticRod::ComputeDarbouxVector(const Eigen::Matrix3f& dA, co
 	{
 		const int i = permutation[c][0];
 		const int j = permutation[c][1];
-		const int k = permutation[c][2];
-
+		const int k = permutation[c][2]; 
 		darboux_vector[i] = dA.col(j).dot(dB.col(k)) - dA.col(k).dot(dB.col(j));
 	}
 
@@ -258,7 +258,8 @@ bool PositionBasedElasticRod::ComputeMaterialFrameDerivative(
 	// d3pi
 	Eigen::Vector3f p01 = p1 - p0;
 	float length_p01 = p01.norm();
-
+	if (length_p01 < EPSILON)
+		return false;
 	d3p0.col(0) = d.col(2)[0] * d.col(2);
 	d3p0.col(1) = d.col(2)[1] * d.col(2);
 	d3p0.col(2) = d.col(2)[2] * d.col(2);
@@ -285,7 +286,8 @@ bool PositionBasedElasticRod::ComputeMaterialFrameDerivative(
 	Eigen::Vector3f p01_cross_p02 = p01.cross(p02);
 
 	float length_cross = p01_cross_p02.norm();
-
+	if (length_cross < EPSILON)
+		return false;
 	Eigen::Matrix3f mat;
 	mat.col(0) = d.col(1)[0] * d.col(1);
 	mat.col(1) = d.col(1)[1] * d.col(1);
